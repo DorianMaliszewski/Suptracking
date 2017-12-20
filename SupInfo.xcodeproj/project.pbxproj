@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F10C894E1FEAE9CB00A7820B /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10C894D1FEAE9CB00A7820B /* NetworkController.swift */; };
+		F10C89501FEAFB3700A7820B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10C894F1FEAFB3700A7820B /* User.swift */; };
 		F10E67571FDEE7B600E48176 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E67561FDEE7B600E48176 /* AppDelegate.swift */; };
 		F10E67591FDEE7B600E48176 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E67581FDEE7B600E48176 /* ViewController.swift */; };
 		F10E675C1FDEE7B600E48176 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F10E675A1FDEE7B600E48176 /* Main.storyboard */; };
@@ -35,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F10C894D1FEAE9CB00A7820B /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
+		F10C894F1FEAFB3700A7820B /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F10E67531FDEE7B600E48176 /* SupInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SupInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10E67561FDEE7B600E48176 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F10E67581FDEE7B600E48176 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				F10E675F1FDEE7B600E48176 /* LaunchScreen.storyboard */,
 				F10E67621FDEE7B600E48176 /* Info.plist */,
 				F10E67841FDEEC0F00E48176 /* AccueilViewController.swift */,
+				F10C894D1FEAE9CB00A7820B /* NetworkController.swift */,
+				F10C894F1FEAFB3700A7820B /* User.swift */,
 			);
 			path = SupInfo;
 			sourceTree = "<group>";
@@ -262,8 +268,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10C894E1FEAE9CB00A7820B /* NetworkController.swift in Sources */,
 				F10E67591FDEE7B600E48176 /* ViewController.swift in Sources */,
 				F10E67571FDEE7B600E48176 /* AppDelegate.swift in Sources */,
+				F10C89501FEAFB3700A7820B /* User.swift in Sources */,
 				F10E67851FDEEC0F00E48176 /* AccueilViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,6 +517,7 @@
 				F10E677D1FDEE7B600E48176 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F10E677E1FDEE7B600E48176 /* Build configuration list for PBXNativeTarget "SupInfoTests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +526,7 @@
 				F10E67801FDEE7B600E48176 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F10E67811FDEE7B600E48176 /* Build configuration list for PBXNativeTarget "SupInfoUITests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +535,7 @@
 				F10E67831FDEE7B600E48176 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
