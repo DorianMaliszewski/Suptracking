@@ -10,7 +10,7 @@ import Foundation
 
 public struct User {
     
-    private var _id:String
+    private var _id:Int
     private var _username:String
     private var _password:String
     private var _phone:String
@@ -20,7 +20,19 @@ public struct User {
     private var _address:String
     private var _email:String
     
-    public init(id:String, username:String, password:String, phone:String, lastName:String, firstName:String, postalCode:String, address:String, email:String){
+    public init(){
+        self._id = 0
+        self._username = "username"
+        self._password = "password"
+        self._phone = "phone"
+        self._lastName = "lastName"
+        self._firstName = "firstName"
+        self._postalCode = "postalCode"
+        self._address = "address"
+        self._email = "email"
+    }
+    
+    public init(id:Int, username:String, password:String, phone:String, lastName:String, firstName:String, postalCode:String, address:String, email:String){
         self._id = id
         self._username = username
         self._password = password
@@ -32,7 +44,7 @@ public struct User {
         self._email = email
     }
     
-    public var Id:String{
+    public var Id:Int{
         get{
             return _id
         }

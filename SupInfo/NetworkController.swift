@@ -32,16 +32,17 @@ public class NetworkController {
             print("responseString \(apiResponse)")
             
             if( error == nil ){
-                var json: Any
                 do {
-                    json = try JSONSerialization.jsonObject(with: data!)
+                     let json = try JSONSerialization.jsonObject(with: data!,options: [.mutableContainers])
                     
                     guard let item = (json as AnyObject) as? [String: Any],
-                        let person = item["user"] as? [String: Any] else {
+                        let person = item["user"] as? [String: Any],
+                        let id2 = person["id"] as? Int
+                        else {
                             return
                     }
-                    
-                    print(person["id"]!)
+                    print(person)
+                    let user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
                 } catch {
                 
                     print(error)
