@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             let viewC = storyBoard.instantiateViewController(withIdentifier: "Acceuil") as! AccueilViewController
-            viewC.setUser(user!)
+            viewC.user = user
             self.present(viewC, animated: true, completion: nil)
         }
     }
