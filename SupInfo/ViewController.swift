@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         if let user: User = NetworkController.Connection(Login: login!,Password: pass!)
         {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let viewC = storyBoard.instantiateViewController(withIdentifier: "Acceuil") as! AccueilViewController
+            let viewC: AccueilViewController = storyBoard.instantiateViewController(withIdentifier: "Accueil") as! AccueilViewController
             viewC.user = user
             self.present(viewC, animated: true, completion: nil)
         }

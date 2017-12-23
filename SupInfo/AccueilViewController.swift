@@ -30,14 +30,7 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
     /**
         L'utilisateur courant
     */
-    var user: User {
-        get {
-            return self.user
-        }
-        set(newValue){
-            self.user = newValue
-        }
-    }
+    var user: User = User()
     
     /**
         Le timer qui va executer une fonction toutes les minutes
@@ -98,8 +91,9 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
         //On affecte un titre et un sous-titre à la marque de la voiture
         carAnnotation.title = "My Car"
         carAnnotation.subtitle = "There is your car"
-
+        self.mapView.addAnnotation(carAnnotation)
         
+        updateStatus()
         //On lance le timer minute
         self.timerMinute = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: {
             timer in self.updateStatus()
@@ -122,6 +116,7 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
             //Si on a réussi on relance notre timer à l'heure
             print("Send user location SUCCESS : Resetting TimerHour")
             self.timerHour.invalidate()
+            self.timerHourIsOn = false
             launchTimerHour()
             print("TimerHour resetted")
         }
@@ -135,6 +130,7 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
         self.carState = NetworkController.getCarPosition(Login: self.user.UserName, Password: self.user.Password)
         //On vérifie qu'on à bien récupérer un truc
         if(self.carState != nil){
+            print("Retrieving carState SUCCESS")
             carAnnotation.coordinate = self.carState!.Location
             self.carState?.Speed != 0 ?
                 //Si la voiture est en mouvement

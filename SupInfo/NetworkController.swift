@@ -19,6 +19,7 @@ public class NetworkController {
         let request = NSMutableURLRequest(url: URL(string: self.baseUrl)!)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
+        let semaphore = DispatchSemaphore(value: 0)
         let postString = "action=login&login=" + login + "&password=" + pass
         request.httpBody = postString.data(using: .utf8)
         let apiRequest = URLSession.shared.dataTask(with: request as URLRequest) {
@@ -30,8 +31,6 @@ public class NetworkController {
                 print("Response = \(response)")
             }
             
-            let apiResponse = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            print("responseString \(apiResponse)")
             
             if( error == nil ){
                 do {
@@ -41,9 +40,11 @@ public class NetworkController {
                         let person = item["user"] as? [String: Any],
                         let id2 = person["id"] as? Int
                         else {
+                            print("Error lors du décodage JSON")
+                            semaphore.signal()
                             return
                     }
-                    print(person)
+                    print("Person : \(person)")
                     user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
                 } catch {
                 
@@ -51,16 +52,18 @@ public class NetworkController {
                 }
             }
             
+            semaphore.signal()
+            
         }
         apiRequest.resume()
-        
-        print(apiRequest)
+        semaphore.wait(timeout: .distantFuture)
+        print("Hello \(user)")
         return user
     }
     
-    public static func getCarPosition(Login login:String, Password pass:String) -> (Int,CLLocationCoordinate2D) {
+    public static func getCarPosition(Login login:String, Password pass:String) -> (Speed: Int,Location: CLLocationCoordinate2D) {
         //TODO : Faire la méthode je mets une valeur constante en attendant pour mes tests
-        return (0,CLLocationCoordinate2D(latitude: 0,longitude: 0))
+        return (0,CLLocationCoordinate2D(latitude: 37.786834,longitude: -122.406417))
     }
     
     public static func sendUserLocation(Login login:String, Password pass:String, Location location:CLLocationCoordinate2D) -> Bool {
