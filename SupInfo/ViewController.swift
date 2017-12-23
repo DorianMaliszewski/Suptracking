@@ -27,10 +27,11 @@ class ViewController: UIViewController {
     @IBAction func submitAction(_ sender: UIButton) {
         let login = txfLogin.text
         let pass = txfPassword.text
-        NetworkController.Connection(Login: login!,Password: pass!)
-        if (login=="supinfo" && pass=="supinfo") {
+        if let user: User = NetworkController.Connection(Login: login!,Password: pass!)
+        {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             let viewC = storyBoard.instantiateViewController(withIdentifier: "Acceuil") as! AccueilViewController
+            viewC.setUser(user!)
             self.present(viewC, animated: true, completion: nil)
         }
     }

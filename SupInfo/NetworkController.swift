@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import CoreLocation
 
 public class NetworkController {
     static let baseUrl = "http://supinfo.steve-colinet.fr/suptracking/"
     
     
-    public static func Connection(Login login:String, Password pass:String){
+    public static func Connection(Login login:String, Password pass:String) -> User? {
+        var user: User? = nil
         print("Debut Connection func")
         let request = NSMutableURLRequest(url: URL(string: self.baseUrl)!)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -42,7 +44,7 @@ public class NetworkController {
                             return
                     }
                     print(person)
-                    let user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
+                    user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
                 } catch {
                 
                     print(error)
@@ -53,5 +55,16 @@ public class NetworkController {
         apiRequest.resume()
         
         print(apiRequest)
+        return user
+    }
+    
+    public static func getCarPosition(Login login:String, Password pass:String) -> (Int,CLLocationCoordinate2D) {
+        //TODO : Faire la méthode je mets une valeur constante en attendant pour mes tests
+        return (0,CLLocationCoordinate2D(latitude: 0,longitude: 0))
+    }
+    
+    public static func sendUserLocation(Login login:String, Password pass:String, Location location:CLLocationCoordinate2D) -> Bool {
+        //TODO : Faire la méthode je mets une valeur constante pour mes tests
+        return true
     }
 }
