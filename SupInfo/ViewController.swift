@@ -33,6 +33,8 @@ class ViewController: UIViewController {
             let viewC: AccueilViewController = storyBoard.instantiateViewController(withIdentifier: "Accueil") as! AccueilViewController
             viewC.user = user
             self.present(viewC, animated: true, completion: nil)
+        } else{
+            self.lblError.text = "Les identifiants sont incorrects vérifiez-les"
         }
     }
 

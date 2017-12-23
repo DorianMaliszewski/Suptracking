@@ -44,7 +44,6 @@ public class NetworkController {
                             semaphore.signal()
                             return
                     }
-                    print("Person : \(person)")
                     user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
                 } catch {
                 
@@ -55,19 +54,109 @@ public class NetworkController {
             semaphore.signal()
             
         }
+        
         apiRequest.resume()
         semaphore.wait(timeout: .distantFuture)
-        print("Hello \(user)")
+        
+        print("Fin Connection func")
         return user
     }
     
     public static func getCarPosition(Login login:String, Password pass:String) -> (Speed: Int,Location: CLLocationCoordinate2D) {
-        //TODO : Faire la méthode je mets une valeur constante en attendant pour mes tests
-        return (0,CLLocationCoordinate2D(latitude: 37.786834,longitude: -122.406417))
+        //return (0,CLLocationCoordinate2D(latitude: 37.786834,longitude: -122.406417))
+        var carState:(Speed: Int, Location: CLLocationCoordinate2D)? = nil
+        print("Debut getPositionCar func")
+        let request = NSMutableURLRequest(url: URL(string: self.baseUrl)!)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        let semaphore = DispatchSemaphore(value: 0)
+        let postString = "action=getCarPosition&login=" + login + "&password=" + pass
+        request.httpBody = postString.data(using: .utf8)
+        let apiRequest = URLSession.shared.dataTask(with: request as URLRequest) {
+            data, response, error in
+            
+            if(error != nil) {print("Erreur lors de la récupération de l'api : " + error!.localizedDescription)}
+            if let httpStatus = response as? HTTPURLResponse , httpStatus.statusCode != 200 {
+                print("statusCode différent de 200 : error \(httpStatus.statusCode)")
+                print("Response = \(response)")
+            }
+            
+            if( error == nil ){
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!,options: [.mutableContainers])
+                    
+                    guard let item = (json as AnyObject) as? [String: Any],
+                        let car = item["position"] as? [String: Any],
+                        let coordonnee = CLLocationCoordinate2DMake(car["latitude"] as! Double, car["longitude"] as! Double) as CLLocationCoordinate2D?
+                        else {
+                            print("Error lors du décodage JSON")
+                            semaphore.signal()
+                            return
+                    }
+                    carState = (Speed: car["speed"] as! Int, Location: coordonnee)
+                } catch {
+                    
+                    print(error)
+                }
+            }
+            
+            semaphore.signal()
+            
+        }
+        
+        apiRequest.resume()
+        semaphore.wait(timeout: .distantFuture)
+        
+        print("Fin getPositionCar func")
+        return carState!
+        
     }
     
     public static func sendUserLocation(Login login:String, Password pass:String, Location location:CLLocationCoordinate2D) -> Bool {
-        //TODO : Faire la méthode je mets une valeur constante pour mes tests
-        return true
+        //return false
+        var reponse: Bool = false
+        print("Debut sendUserLocation func")
+        let request = NSMutableURLRequest(url: URL(string: self.baseUrl)!)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        let semaphore = DispatchSemaphore(value: 0)
+        let postString = "action=updatePosition&login=" + login + "&password=" + pass + "&latitude=" + String(location.latitude) + "&longitude=" + String(location.longitude)
+        request.httpBody = postString.data(using: .utf8)
+        let apiRequest = URLSession.shared.dataTask(with: request as URLRequest) {
+            data, response, error in
+            
+            if(error != nil) {print("Erreur lors de la récupération de l'api : " + error!.localizedDescription)}
+            if let httpStatus = response as? HTTPURLResponse , httpStatus.statusCode != 200 {
+                print("statusCode différent de 200 : error \(httpStatus.statusCode)")
+                print("Response = \(response)")
+            }
+            
+            if( error == nil ){
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!,options: [.mutableContainers])
+                    
+                    guard let item = (json as AnyObject) as? [String: Any],
+                        let succes = item["success"] as? Bool
+                        else {
+                            print("Error lors du décodage JSON")
+                            semaphore.signal()
+                            return
+                    }
+                    reponse = succes
+                } catch {
+                    
+                    print(error)
+                }
+            }
+            
+            semaphore.signal()
+            
+        }
+        
+        apiRequest.resume()
+        semaphore.wait(timeout: .distantFuture)
+        
+        print("Fin sendUserLocation func")
+        return reponse
     }
 }
