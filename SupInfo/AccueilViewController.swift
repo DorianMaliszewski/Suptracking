@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import SystemConfiguration
 
 class AccueilViewController: UIViewController, CLLocationManagerDelegate {
 
@@ -110,36 +111,46 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
             Function fired when the timerMinute end. Update all information of the application
     */
     private func updateStatus(){
-        //On envoi les coordonnées de l'utilisateur
-        let userLocation: CLLocationCoordinate2D = self.mapView.userLocation.coordinate
-        if(NetworkController.sendUserLocation(Login: user.UserName, Password: user.Password, Location: userLocation)){
-            //Si on a réussi on relance notre timer à l'heure
-            print("Send user location SUCCESS : Resetting TimerHour")
-            self.timerHour.invalidate()
-            self.timerHourIsOn = false
-            launchTimerHour()
-            print("TimerHour resetted")
-        }
-        else{
-            //Si on a pas réussi à mettre à jour la position de l'utilisateur alors on on verifie que notre timerHour est lancé
-            print("Can't send user location")
-            checkTimerHour()
-        }
         
-        //On récupère l'état de la voiture
-        self.carState = NetworkController.getCarPosition(Login: self.user.UserName, Password: self.user.Password)
-        //On vérifie qu'on à bien récupérer un truc
-        if(self.carState != nil){
-            print("Retrieving carState SUCCESS")
-            carAnnotation.coordinate = self.carState!.Location
-            self.carState?.Speed != 0 ?
-                //Si la voiture est en mouvement
-                checkUserLocation() :
-                //Si la voiture est à l'arrêt
+        if !isInternetAvailable() {
+            print("Pas de connecion internet")
+            let alert = UIAlertController(title: "Warning", message: "The Internet is not available", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+            alert.addAction(action)
+            present(alert, animated: true, completion: nil)
+        } else {
+        
+            //On envoi les coordonnées de l'utilisateur
+            let userLocation: CLLocationCoordinate2D = self.mapView.userLocation.coordinate
+            if(NetworkController.sendUserLocation(Login: user.UserName, Password: user.Password, Location: userLocation)){
+                //Si on a réussi on relance notre timer à l'heure
+                print("Send user location SUCCESS : Resetting TimerHour")
+                self.timerHour.invalidate()
+                self.timerHourIsOn = false
+                launchTimerHour()
+                print("TimerHour resetted")
+            }
+            else{
+                //Si on a pas réussi à mettre à jour la position de l'utilisateur alors on on verifie que notre timerHour est lancé
+                print("Can't send user location")
                 checkTimerHour()
-        }
-        else{
-            print("Error carState is nil")
+            }
+        
+            //On récupère l'état de la voiture
+            self.carState = NetworkController.getCarPosition(Login: self.user.UserName, Password: self.user.Password)
+            //On vérifie qu'on à bien récupérer un truc
+            if(self.carState != nil){
+                print("Retrieving carState SUCCESS")
+                carAnnotation.coordinate = self.carState!.Location
+                self.carState?.Speed != 0 ?
+                    //Si la voiture est en mouvement
+                    checkUserLocation() :
+                    //Si la voiture est à l'arrêt
+                    checkTimerHour()
+            }
+            else{
+                print("Error carState is nil")
+            }
         }
     }
     
@@ -215,6 +226,29 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
             return true
         }
     }
+    
+    // Vérifie la connection internet
+    func isInternetAvailable() -> Bool {
+        print("Vérifiaction de la connection")
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        return (isReachable && !needsConnection)
+    }
+    
     
     /**
         Check if the timerHour is already started otherwise start it

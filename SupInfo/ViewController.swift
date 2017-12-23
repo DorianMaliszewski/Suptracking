@@ -27,14 +27,14 @@ class ViewController: UIViewController {
     @IBAction func submitAction(_ sender: UIButton) {
         let login = txfLogin.text
         let pass = txfPassword.text
-        if let user: User = NetworkController.Connection(Login: login!,Password: pass!)
-        {
+        if let user: User = NetworkController.Connection(Login: login!,Password: pass!) {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             let viewC: AccueilViewController = storyBoard.instantiateViewController(withIdentifier: "Accueil") as! AccueilViewController
             viewC.user = user
             self.present(viewC, animated: true, completion: nil)
         } else{
             self.lblError.text = "Les identifiants sont incorrects vérifiez-les"
+            self.lblError.isHidden = false
         }
     }
 

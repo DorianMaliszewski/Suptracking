@@ -36,15 +36,25 @@ public class NetworkController {
                 do {
                      let json = try JSONSerialization.jsonObject(with: data!,options: [.mutableContainers])
                     
-                    guard let item = (json as AnyObject) as? [String: Any],
-                        let person = item["user"] as? [String: Any],
-                        let id2 = person["id"] as? Int
+                    
+                    guard let itemSuccess = (json as AnyObject) as? [String: Any],
+                        let success = itemSuccess["success"] as? Bool
                         else {
                             print("Error lors du décodage JSON")
                             semaphore.signal()
                             return
                     }
-                    user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
+                    if success == true{
+                            guard let item = (json as AnyObject) as? [String: Any],
+                            let person = item["user"] as? [String: Any],
+                            let id2 = person["id"] as? Int
+                            else {
+                                print("Error lors du décodage JSON")
+                                semaphore.signal()
+                                return
+                            }
+                        user = User(id: id2, username: person["username"]! as! String, password: person["password"]! as! String, phone: person["phone"]! as! String, lastName: person["lastname"]! as! String, firstName: person["firstname"]! as! String, postalCode: person["postalCode"]! as! String, address: person["address"]! as! String, email: person["email"]! as! String)
+                    }
                 } catch {
                 
                     print(error)
