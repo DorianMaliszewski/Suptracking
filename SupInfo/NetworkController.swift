@@ -72,9 +72,9 @@ public class NetworkController {
         return user
     }
     
-    public static func getCarPosition(Login login:String, Password pass:String) -> (Speed: Int,Location: CLLocationCoordinate2D) {
+    public static func getCarPosition(Login login:String, Password pass:String) -> Car? {
         //return (0,CLLocationCoordinate2D(latitude: 37.786834,longitude: -122.406417))
-        var carState:(Speed: Int, Location: CLLocationCoordinate2D)? = nil
+        var carState:Car? = nil
         print("Debut getPositionCar func")
         let request = NSMutableURLRequest(url: URL(string: self.baseUrl)!)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -94,16 +94,24 @@ public class NetworkController {
             if( error == nil ){
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!,options: [.mutableContainers])
-                    
-                    guard let item = (json as AnyObject) as? [String: Any],
-                        let car = item["position"] as? [String: Any],
-                        let coordonnee = CLLocationCoordinate2DMake(car["latitude"] as! Double, car["longitude"] as! Double) as CLLocationCoordinate2D?
+                    guard let itemSuccess = (json as AnyObject) as? [String: Any],
+                        let success = itemSuccess["success"] as? Bool
                         else {
                             print("Error lors du décodage JSON")
                             semaphore.signal()
                             return
+                        }
+                    if success == true{
+                        guard let item = (json as AnyObject) as? [String: Any],
+                            let car = item["position"] as? [String: Any],
+                            let coordonnee = CLLocationCoordinate2DMake(car["latitude"] as! Double, car["longitude"] as! Double) as CLLocationCoordinate2D?
+                            else {
+                                print("Error lors du décodage JSON")
+                                semaphore.signal()
+                                return
+                            }
+                        carState = Car(speed: car["speed"] as! Int, location: coordonnee)
                     }
-                    carState = (Speed: car["speed"] as! Int, Location: coordonnee)
                 } catch {
                     
                     print(error)
@@ -118,8 +126,7 @@ public class NetworkController {
         semaphore.wait(timeout: .distantFuture)
         
         print("Fin getPositionCar func")
-        return carState!
-        
+        return carState
     }
     
     public static func sendUserLocation(Login login:String, Password pass:String, Location location:CLLocationCoordinate2D) -> Bool {

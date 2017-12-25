@@ -17,6 +17,7 @@
 		F10E676C1FDEE7B600E48176 /* SupInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E676B1FDEE7B600E48176 /* SupInfoTests.swift */; };
 		F10E67771FDEE7B600E48176 /* SupInfoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E67761FDEE7B600E48176 /* SupInfoUITests.swift */; };
 		F10E67851FDEEC0F00E48176 /* AccueilViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10E67841FDEEC0F00E48176 /* AccueilViewController.swift */; };
+		F15B88B81FF16A7E003A8ABA /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15B88B71FF16A7E003A8ABA /* Car.swift */; };
 		F1619CA61FEDA3D600995A1B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1619CA51FEDA3D600995A1B /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		F10E67761FDEE7B600E48176 /* SupInfoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupInfoUITests.swift; sourceTree = "<group>"; };
 		F10E67781FDEE7B600E48176 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F10E67841FDEEC0F00E48176 /* AccueilViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccueilViewController.swift; sourceTree = "<group>"; };
+		F15B88B71FF16A7E003A8ABA /* Car.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		F1619CA51FEDA3D600995A1B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -116,6 +118,7 @@
 				F10E67841FDEEC0F00E48176 /* AccueilViewController.swift */,
 				F10C894D1FEAE9CB00A7820B /* NetworkController.swift */,
 				F10C894F1FEAFB3700A7820B /* User.swift */,
+				F15B88B71FF16A7E003A8ABA /* Car.swift */,
 			);
 			path = SupInfo;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 			files = (
 				F10C894E1FEAE9CB00A7820B /* NetworkController.swift in Sources */,
 				F10E67591FDEE7B600E48176 /* ViewController.swift in Sources */,
+				F15B88B81FF16A7E003A8ABA /* Car.swift in Sources */,
 				F10E67571FDEE7B600E48176 /* AppDelegate.swift in Sources */,
 				F10C89501FEAFB3700A7820B /* User.swift in Sources */,
 				F10E67851FDEEC0F00E48176 /* AccueilViewController.swift in Sources */,

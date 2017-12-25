@@ -26,12 +26,12 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
     /**
         l'état de la voiture
     */
-    private var carState: (Speed: Int, Location: CLLocationCoordinate2D)?
+    private var carState: Car? = nil
     
     /**
         L'utilisateur courant
     */
-    var user: User = User()
+    public var user: User = User()
     
     /**
         Le timer qui va executer une fonction toutes les minutes
@@ -106,11 +106,34 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func logoutAction(_ sender: UIButton) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let viewC: ViewController = storyBoard.instantiateViewController(withIdentifier: "Principal") as! ViewController
+        self.present(viewC, animated: true, completion: nil)
+    }
+    
 
     /**
             Function fired when the timerMinute end. Update all information of the application
     */
     private func updateStatus(){
+        
+            //On envoi les coordonnées de l'utilisateur
+       let userLocation: CLLocationCoordinate2D = self.mapView.userLocation.coordinate
+       if(NetworkController.sendUserLocation(Login: user.UserName, Password: user.Password, Location: userLocation)){
+           //Si on a réussi on relance notre timer à l'heure
+            print("Send user location SUCCESS : Resetting TimerHour")
+            self.timerHour.invalidate()
+            self.timerHourIsOn = false
+            launchTimerHour()
+            print("TimerHour resetted")
+       }
+       else{
+           //Si on a pas réussi à mettre à jour la position de l'utilisateur alors on on verifie que notre timerHour est lancé
+           print("Can't send user location")
+           checkTimerHour()
+       }
+        
         
         if !isInternetAvailable() {
             print("Pas de connecion internet")
@@ -119,29 +142,12 @@ class AccueilViewController: UIViewController, CLLocationManagerDelegate {
             alert.addAction(action)
             present(alert, animated: true, completion: nil)
         } else {
-        
-            //On envoi les coordonnées de l'utilisateur
-            let userLocation: CLLocationCoordinate2D = self.mapView.userLocation.coordinate
-            if(NetworkController.sendUserLocation(Login: user.UserName, Password: user.Password, Location: userLocation)){
-                //Si on a réussi on relance notre timer à l'heure
-                print("Send user location SUCCESS : Resetting TimerHour")
-                self.timerHour.invalidate()
-                self.timerHourIsOn = false
-                launchTimerHour()
-                print("TimerHour resetted")
-            }
-            else{
-                //Si on a pas réussi à mettre à jour la position de l'utilisateur alors on on verifie que notre timerHour est lancé
-                print("Can't send user location")
-                checkTimerHour()
-            }
-        
             //On récupère l'état de la voiture
             self.carState = NetworkController.getCarPosition(Login: self.user.UserName, Password: self.user.Password)
             //On vérifie qu'on à bien récupérer un truc
             if(self.carState != nil){
                 print("Retrieving carState SUCCESS")
-                carAnnotation.coordinate = self.carState!.Location
+                carAnnotation.coordinate = (self.carState?.Location)!
                 self.carState?.Speed != 0 ?
                     //Si la voiture est en mouvement
                     checkUserLocation() :
